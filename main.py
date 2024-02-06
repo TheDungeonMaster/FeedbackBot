@@ -1,16 +1,40 @@
-# This is a sample Python script.
+from telegram import Update
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+# Replace 'YOUR_TOKEN_HERE' with your bot's token
+TOKEN = '6952588526:AAH3NQ-TECU2T3R1ltzkmalEB8YfzTBe25A'
+
+# Replace 'GROUP_CHAT_ID' with the actual chat ID of your group
+GROUP_CHAT_ID = '-1002043872444'
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Send a message when the command /start is issued."""
+    await context.bot.send_message(chat_id=update.effective_chat.id,
+                                   text='Hi! Send me something and I will forward it to the group!')
 
 
-# Press the green button in the gutter to run the script.
+async def forward_to_group(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Forward received message to the group."""
+    await context.bot.forward_message(chat_id=GROUP_CHAT_ID,
+                                      from_chat_id=update.effective_chat.id,
+                                      message_id=update.message.message_id)
+
+
+def main() -> None:
+    """Start the bot."""
+    # Create the Application and pass it your bot's token.
+    application = Application.builder().token(TOKEN).build()
+
+    # on different commands - answer in Telegram
+    application.add_handler(CommandHandler("start", start))
+
+    # on non-command i.e message - echo the message on Telegram
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, forward_to_group))
+
+    # Run the bot until the user presses Ctrl-C
+    application.run_polling()
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    main()
