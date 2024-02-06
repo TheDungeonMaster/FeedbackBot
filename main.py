@@ -1,9 +1,9 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-import api_key
+import API_KEY
 
 # Replace 'YOUR_TOKEN_HERE' with your bot's token
-TOKEN = api_key.TOKEN
+TOKEN = API_KEY.TOKEN
 
 # Replace 'GROUP_CHAT_ID' with the actual chat ID of your group
 GROUP_CHAT_ID = '-1002043872444'
